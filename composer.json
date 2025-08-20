@@ -1,0 +1,14 @@
+{
+  "name": "raldea/email-consent",
+  "version": "1.0.0",
+  "description": "A simple checkbox drop-in.",
+  "authors": [
+    {
+      "name": "Ricky Aldea",
+      "email": "ricky@abovethefray.io"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  }
+}
