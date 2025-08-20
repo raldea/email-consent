@@ -1,6 +1,5 @@
 {
-  "private": true,
-  "name": "@dropins/cart",
+  "name": "@raldea/email-consent",
   "version": "0.1.0",
   "license": "MIT",
   "engines": {
@@ -9,6 +8,10 @@
   "files": [
     "*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raldea/email-consent.git"
+  },
   "sideEffects": false,
   "scripts": {
     "dev": "concurrently 'npm run storybook' 'npm run serve'",
