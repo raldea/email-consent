@@ -2,6 +2,7 @@
   "name": "raldea/email-consent",
   "version": "1.0.0",
   "description": "A simple checkbox drop-in.",
+  "license": "SEE LICENSE IN LICENSE.md",
   "authors": [
     {
       "name": "Ricky Aldea",
