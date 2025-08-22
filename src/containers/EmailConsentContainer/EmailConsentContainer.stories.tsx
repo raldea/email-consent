@@ -19,18 +19,6 @@ const meta: Meta<EmailConsentContainerProps> = {
     layout: 'centered', // centered | fullscreen
   },
   argTypes: {
-    children: {
-      description: 'Add text to the EmailConsentUiComponent.',
-      table: {
-        type: { summary: 'string' }
-      },
-    },
-    name: {
-      description: 'Add name to the EmailConsentUiComponent checkbox.',
-      table: {
-        type: { summary: 'string' }
-      },
-    },
     checked: {
       description: 'Set checkbox state',
       table: {
@@ -52,8 +40,14 @@ type Story = StoryObj<EmailConsentContainerProps>;
 
 export const EmailConsentContainer: Story = {
   args: {
-    children: 'Email Consent',
-    name: 'email_consent',
-    checked: false
+    checked: false,
+    enable_sms_consent: true,
+    enable_email_consent: true,
+    sms_consent_label: 'Subscribe for SMS updates *',
+    sms_disclosure: '* By checking this box and entering your phone number above, you consent to receive' +
+        ' marketing text messages (e.g. [promos], [cart reminders]).',
+    email_consent_label: 'Subscribe for email updates',
+    sms_consent_name: 'klaviyo_sms_consent',
+    email_consent_name: 'klaviyo_email_consent'
   },
 };

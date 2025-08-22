@@ -38,7 +38,7 @@
   <body>
     <script type="module">
       import { render as provider } from 'emailConsent/render.js';
-      import { EmailConsentContainer } from 'emailConsent/containers/EmailConsentContainer.js';
+      import { EmailConsentContainer, KlaviyoApiCreateUpdate } from 'emailConsent/containers/EmailConsentContainer.js';
 
       const myContainer = document.getElementById('my-container');
       provider.render(EmailConsentContainer, {
@@ -46,6 +46,9 @@
         name: 'email_consent',
         checked: false
       })(myContainer);
+
+      console.log('test');
+      KlaviyoApiCreateUpdate("alreadricy@gmail.com", "pk_f74527dea5f4f1084356a21ed111ae8517", "https://a.klaviyo.com/api", "2025-07-15");
     </script>
 
     <div id="app">
@@ -53,6 +56,8 @@
       <div class="cards">
         <div class="containers">
           <h2 class="heading">Frontend Containers</h2>
+
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/500px-Image_created_with_a_mobile_phone.png" alt="">
 
           <div id="my-container" class="container"></div>
         </div>

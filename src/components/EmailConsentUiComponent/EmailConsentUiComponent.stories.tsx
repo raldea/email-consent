@@ -18,33 +18,6 @@ const meta: Meta<EmailConsentUiComponentProps> = {
   title: 'Components/EmailConsentUiComponent',
   component,
   argTypes: {
-    variant: {
-      description: 'Test Type',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'primary' },
-      },
-    },
-    children: {
-      description: 'Add text to the EmailConsentUiComponent.',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'EmailConsentUiComponent defaultValue for children.' },
-      }
-    },
-    name: {
-      description: 'Add name to the EmailConsentUiComponent checkbox',
-      table: {
-        type: { summary: 'string' }
-      }
-    },
-    onClick: {
-      description: 'Add a click handler.',
-      table: {
-        type: { summary: 'function' },
-      },
-      action: 'onClick',
-    },
     checked: {
       description: 'Set checkbox state',
       table: {
@@ -63,9 +36,8 @@ type Story = StoryObj<EmailConsentUiComponentProps>;
  */
 export const EmailConsentUiComponent: Story = {
   args: {
-    children: "Email Consent",
-    variant: "secondary",
-    name: "email_consent",
+    label: "Checkbox Label",
+    name: "checkbox_name",
     checked: false
   },
 };

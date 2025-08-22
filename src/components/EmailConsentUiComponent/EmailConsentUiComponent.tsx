@@ -14,21 +14,20 @@ import { Checkbox } from '@adobe-commerce/elsie/components/Checkbox';
 import '@/emailconsent/components/EmailConsentUiComponent/EmailConsentUiComponent.css';
 
 export interface EmailConsentUiComponentProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'primary' | 'secondary' | 'tertiary';
-  children: string;
   name: string;
+  label: string;
 }
 
 export const EmailConsentUiComponent: FunctionComponent<EmailConsentUiComponentProps> = ({
   className,
-  children,
-  name,
   checked,
+  name,
+  label,
   ...props
 }) => {
   return (
     <div {...props} className={classes(['emailconsent-email-consent-ui-component', className])}>
-      <Checkbox name={name} label={children} checked={checked} />
+      <Checkbox name={name} label={label} checked={checked} />
     </div>
   );
 };
