@@ -61,15 +61,21 @@ export const KlaviyoApiCreateUpdate = async (
     smsListCode: string,
     meshApiPoint: string
 ): Promise<object|null> => {
-    let checkIfEmailExists = false;
+    let checkIfEmailExists = {
+        data: {
+            id: '111'
+        }
+    };
     let profile = null;
-    let profileId;
+    let profileId = '111';
 
     if (!checkIfEmailExists) {
+        console.log('test');
         // TODO
         // let data = restructureCustomerObject(checkoutData, addressData, null, null, null, true);
         // profile = createProfile(data, meshApiPoint);
     } else {
+        console.log('test1');
         profile = checkIfEmailExists;
     }
 
@@ -83,7 +89,7 @@ export const KlaviyoApiCreateUpdate = async (
         let data = restructureCustomerObject(checkoutData, addressData, 'email', profileId, emailListCode);
 
         if (Object.keys(data).length > 0) {
-            console.log('---!');
+            console.log('---!!');
             console.log(data);
             subscribeData.push(data);
         }
