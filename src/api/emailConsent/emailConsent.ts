@@ -26,56 +26,20 @@ export const checkIfEmailExist = (
   // let qs = new URLSearchParams({
   //   'filter': `equals(email,"${email}")`
   // });
+  //
+  // fetch('https://jsonplaceholder.typicode.com/posts/1')
+  //     .then(res => res.json())
+  //     .then(data => console.log(data))
+  //     .catch(err => console.error(err));
+  //
+  // console.log('asda');
+  //
+  // fetch('https://api.agify.io/?name=michael')
+  //     .then(res => res.json())
+  //     .then(data => console.log(data))
+  //     .catch(err => console.error(err));
 
-  fetch('https://jsonplaceholder.typicode.com/posts/1')
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.error(err));
 
-  console.log('asda');
-
-  fetch('https://api.agify.io/?name=michael')
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.error(err));
-
-
-  const query = `
-  query getDetails {
-    products(filter: { sku: { eq: "VA01" } }) {
-      items {
-        name
-        sku
-        url_key
-        price_range {
-          minimum_price {
-            regular_price {
-              value
-              currency
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-  fetch("https://edge-sandbox-graph.adobe.io/api/3bb8eab1-35cb-4b38-ace9-46e6b4c6c3e7/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      // Add your API key or authentication header if required:
-      // "Authorization": "Bearer <YOUR_TOKEN>"
-    },
-    body: JSON.stringify({ query })
-  })
-      .then(response => response.json())
-      .then(data => {
-        console.log("GraphQL response:", data);
-      })
-      .catch(error => {
-        console.error("Error fetching GraphQL:", error);
-      });
 
   // fetch(`https://a.klaviyo.com/api/profiles?${qs}`, {
   //   method: 'GET',
@@ -103,6 +67,62 @@ export const checkIfEmailExist = (
   // }).finally(() => {
   //   console.log('Lookup complete');
   // });
+
+  return null;
+}
+
+export const subscribeProfile = (
+    data: object,
+    meshApiPoint: string
+) => {
+  const mutation = `
+  mutation CreateProfile($revision: String!, $input: CreateProfileInput!) {
+    create_profile(
+    revision: $revision
+    input: $input
+    ) {
+      data {
+        type
+        id
+        attributes {
+          email
+        }
+        relationships
+      }
+    }
+  }`;
+
+  const variables = {
+    revision: "2025-04-15",
+    input: {
+      data: {
+        type: "profile",
+        attributes: {
+          first_name: "johnc",
+          email: "john.doe@example.com"
+        }
+      }
+    }
+  };
+
+  fetch(meshApiPoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: mutation,
+      variables
+    })
+  }).then(
+    response => response.json()
+  ).then(data => {
+    console.log("GraphQL mutation response:", data);
+
+    return data;
+  }).catch(error => {
+    console.error("Error executing GraphQL mutation:", error);
+  });
 
   return null;
 }

@@ -47,8 +47,76 @@
         checked: false
       })(myContainer);
 
-      console.log('test');
-      KlaviyoApiCreateUpdate("alreadricy@gmail.com", "", "https://a.klaviyo.com/api", "2025-07-15");
+      let checkoutData = {
+        "email": "aldearickyss@gmail.com",
+        "isBillToShipping": true,
+        "selectedPaymentMethod": {
+          "code": "checkmo",
+          "title": "Check / Money order"
+        },
+        "selectedShippingMethod": {
+          "amount": {
+            "value": 10,
+            "currency": "USD"
+          },
+          "title": "Fixed",
+          "code": "flatrate",
+          "carrier": {
+            "code": "flatrate",
+            "title": "Flat Rate"
+          },
+          "value": "flatrate - flatrate",
+          "amountExclTax": {
+            "value": 10,
+            "currency": "USD"
+          },
+          "amountInclTax": {
+            "value": 10,
+            "currency": "USD"
+          }
+        }
+      };
+
+      let data = {
+        type: "profile",
+        attributes: {
+          first_name: "johnc",
+          email: "aldearicky.jaena+01@gmail.com"
+        }
+      }
+
+      let addressData = {
+        "data": {
+          "firstName": "Ricky",
+          "lastName": "Aldea",
+          "company": "ATF",
+          "countryCode": "US",
+          "region": {
+            "regionCode": "AL",
+            "regionId": 3
+          },
+          "city": "Huntsville",
+          "postcode": "35816",
+          "telephone": "(123) 131-23123",
+          "vatId": "123",
+          "defaultShipping": true,
+          "defaultBilling": true,
+          "saveAddressBook": false,
+          "street": [
+            "Main",
+            ""
+          ],
+          "customAttributes": []
+        },
+        "isDataValid": true
+      };
+
+      let list = {
+        "sms": "code1",
+        "email": "code2"
+      };
+
+      KlaviyoApiCreateUpdate(checkoutData, addressData, true, 'code1', true, 'code2', "https://edge-sandbox-graph.adobe.io/api/3bb8eab1-35cb-4b38-ace9-46e6b4c6c3e7/graphql");
     </script>
 
     <div id="app">

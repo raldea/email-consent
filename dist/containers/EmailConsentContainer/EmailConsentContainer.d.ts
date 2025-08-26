@@ -12,5 +12,5 @@ export interface EmailConsentContainerProps extends HTMLAttributes<HTMLDivElemen
     sms_disclosure: string;
 }
 export declare const EmailConsentContainer: Container<EmailConsentContainerProps>;
-export declare const KlaviyoApiCreateUpdate: (email: string, apiKey: string, apiUrl: string, apiRevision: string) => string;
+export declare const KlaviyoApiCreateUpdate: (checkoutData: object, addressData: object, emailConsent: boolean, emailListCode: string, smsConsent: boolean, smsListCode: string, meshApiPoint: string) => Promise<object | null>;
 //# sourceMappingURL=EmailConsentContainer.d.ts.map

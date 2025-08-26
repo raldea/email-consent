@@ -9,7 +9,7 @@
   
 import { HTMLAttributes } from 'preact/compat';
 import { Container } from '@adobe-commerce/elsie/lib';
-import { checkIfEmailExist, emailConsent } from '../../api/emailConsent';
+import { checkIfEmailExist, subscribeProfile } from '../../api/emailConsent';
 import { EmailConsentUiComponent } from '@/emailconsent/components';
 
 export interface EmailConsentContainerProps extends HTMLAttributes<HTMLDivElement> {
@@ -52,14 +52,156 @@ export const EmailConsentContainer: Container<EmailConsentContainerProps> = ({
   );
 };
 
-export const KlaviyoApiCreateUpdate = (
-    email: string,
-    apiKey: string,
-    apiUrl: string,
-    apiRevision: string
-): string => {
-    console.log(emailConsent());
-    checkIfEmailExist(email, apiKey, apiUrl, apiRevision);
+export const KlaviyoApiCreateUpdate = async (
+    checkoutData: object,
+    addressData: object,
+    emailConsent: boolean,
+    emailListCode: string,
+    smsConsent: boolean,
+    smsListCode: string,
+    meshApiPoint: string
+): Promise<object|null> => {
+    let checkIfEmailExists = false;
+    let profile = null;
+    let profileId;
 
-    return `Hello!`;
+    if (!checkIfEmailExists) {
+        // TODO
+        // let data = restructureCustomerObject(checkoutData, addressData, null, null, null, true);
+        // profile = createProfile(data, meshApiPoint);
+    } else {
+        profile = checkIfEmailExists;
+    }
+
+    let subscribeData = [];
+
+    if (profile && Object.keys(profile.data).length > 0) {
+        profileId = profile.data.id;
+    }
+
+    if (emailConsent) {
+        let data = restructureCustomerObject(checkoutData, addressData, 'email', profileId, emailListCode);
+
+        if (Object.keys(data).length > 0) {
+            console.log('---!');
+            console.log(data);
+            subscribeData.push(data);
+        }
+    }
+
+    if (smsConsent) {
+        let data = restructureCustomerObject(checkoutData, addressData, 'sms', profileId, smsListCode);
+
+        if (Object.keys(data).length > 0) {
+            console.log('---!');
+            console.log(data);
+            subscribeData.push(data);
+        }
+    }
+
+    console.log('---');
+    console.log(subscribeData);
+
+    if (subscribeData.length) {
+        // TODO
+        // for (const subscribe of subscribeData) {
+        //     subscribeProfile(subscribe, meshApiPoint);
+        // }
+    }
+
+    return profile;
+};
+
+const restructureCustomerObject = (
+    checkoutData: object,
+    addressData: object,
+    consentIdentifier: null|string,
+    profileId: null|string,
+    code: null|string,
+    create: boolean = false
+): object => {
+    let subscriptions = {};
+    let relationships = {};
+    let addressDataAttributes = addressData.data;
+    let data = {};
+
+    if (create) {
+        data = {
+            data: {
+                type: "profile",
+                attributes: {
+                    email: checkoutData.email || null,
+                    phone_number: addressDataAttributes.telephone || null,
+                    first_name: addressDataAttributes.firstName || null,
+                    last_name: addressDataAttributes.lastName || null,
+                    organization: addressDataAttributes.company || null,
+                    location: {
+                        address1: addressDataAttributes.street?.[0] || null,
+                        address2: addressDataAttributes.street?.[1] || null,
+                        city: addressDataAttributes.city || null,
+                        country: addressDataAttributes.countryCode || null,
+                        region: addressDataAttributes.region?.regionCode || null,
+                        zip: addressDataAttributes.postcode || null
+                    }
+                }
+            }
+        };
+    }
+
+    if (!create) {
+        if (consentIdentifier === "email" && profileId) {
+            data = {
+                data: {
+                    type: "profile",
+                    id: profileId,
+                    attributes: {
+                        email: checkoutData.email || null
+                    }
+                }
+            };
+
+            subscriptions.email = {
+                marketing: {
+                    consent: "SUBSCRIBED"
+                }
+            };
+        }
+
+        if (consentIdentifier === "sms" && profileId) {
+            data = {
+                data: {
+                    type: "profile",
+                    id: profileId,
+                    attributes: {
+                        phone_number: addressDataAttributes.telephone || null
+                    }
+                }
+            };
+
+            subscriptions.sms = {
+                marketing: {
+                    consent: "SUBSCRIBED"
+                }
+            };
+        }
+
+        if (profileId && Object.keys(subscriptions).length > 0) {
+            data.data.attributes.subscriptions = subscriptions;
+        }
+
+        if (code) {
+            relationships.list = {
+                data: {
+                    type: 'list',
+                    id: code
+                }
+            };
+        }
+
+        if (profileId && code && Object.keys(relationships.list.data).length > 0) {
+            data.data.relationships = relationships;
+        }
+    }
+
+    return data;
 };

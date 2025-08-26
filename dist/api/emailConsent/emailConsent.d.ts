@@ -8,4 +8,5 @@
  *******************************************************************/
 export declare const emailConsent: () => string;
 export declare const checkIfEmailExist: (email: string, apiKey: string, apiUrl: string, apiRevision: string) => null;
+export declare const subscribeProfile: (data: object, meshApiPoint: string) => null;
 //# sourceMappingURL=emailConsent.d.ts.map
