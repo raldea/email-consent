@@ -169,8 +169,7 @@ const restructureCustomerObject = (
                                     type: "profile",
                                     id: profileId,
                                     attributes: {
-                                        email: checkoutData.email || null,
-                                        phone_number: phone || null
+                                        email: checkoutData.email || null
                                     }
                                 }
                             ]
