@@ -1,19 +1,4 @@
 /*! Copyright 2025 Adobe
 All Rights Reserved. */
-import{Initializer as s}from"@dropins/tools/lib.js";import{FetchGraphQL as a}from"@dropins/tools/fetch-graphql.js";const r=new s({init:async o=>{const t={};r.config.setConfig({...t,...o})},listeners:()=>[]}),p=r.config,{setEndpoint:h,setFetchGraphQlHeader:u,removeFetchGraphQlHeader:f,setFetchGraphQlHeaders:m,fetchGraphQl:g,getConfig:d}=new a().getMethods(),y=()=>"Howdy!",b=(o,t,n,i)=>(console.log(o),console.log(t),console.log(n),console.log(i),null),v=(o,t)=>(fetch(t,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:`
-  mutation CreateProfile($revision: String!, $input: CreateProfileInput!) {
-    create_profile(
-    revision: $revision
-    input: $input
-    ) {
-      data {
-        type
-        id
-        attributes {
-          email
-        }
-        relationships
-      }
-    }
-  }`,variables:{revision:"2025-04-15",input:{data:{type:"profile",attributes:{first_name:"johnc",email:"john.doe@example.com"}}}}})}).then(e=>e.json()).then(e=>(console.log("GraphQL mutation response:",e),e)).catch(e=>{console.error("Error executing GraphQL mutation:",e)}),null);export{b as checkIfEmailExist,p as config,y as emailConsent,g as fetchGraphQl,d as getConfig,r as initialize,f as removeFetchGraphQlHeader,h as setEndpoint,u as setFetchGraphQlHeader,m as setFetchGraphQlHeaders,v as subscribeProfile};
+import{c as f,a as l,f as h,g as p,r as g,b as d,d as m,e as G,s as Q}from"./chunks/emailConsent.js";import{Initializer as t}from"@dropins/tools/lib.js";import"@dropins/tools/fetch-graphql.js";const e=new t({init:async i=>{const s={};e.config.setConfig({...s,...i})},listeners:()=>[]}),o=e.config;export{f as checkIfEmailExist,o as config,l as createProfile,h as fetchGraphQl,p as getConfig,e as initialize,g as removeFetchGraphQlHeader,d as setEndpoint,m as setFetchGraphQlHeader,G as setFetchGraphQlHeaders,Q as subscribeProfile};
 //# sourceMappingURL=api.js.map

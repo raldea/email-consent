@@ -48,7 +48,7 @@
       })(myContainer);
 
       let checkoutData = {
-        "email": "aldearickyss@gmail.com",
+        "email": "test_email@gmail.com",
         "isBillToShipping": true,
         "selectedPaymentMethod": {
           "code": "checkmo",
@@ -56,7 +56,7 @@
         },
         "selectedShippingMethod": {
           "amount": {
-            "value": 10,
+            "value": 5,
             "currency": "USD"
           },
           "title": "Fixed",
@@ -67,23 +67,15 @@
           },
           "value": "flatrate - flatrate",
           "amountExclTax": {
-            "value": 10,
+            "value": 5,
             "currency": "USD"
           },
           "amountInclTax": {
-            "value": 10,
+            "value": 5,
             "currency": "USD"
           }
         }
       };
-
-      let data = {
-        type: "profile",
-        attributes: {
-          first_name: "johnc",
-          email: "aldearicky.jaena+01@gmail.com"
-        }
-      }
 
       let addressData = {
         "data": {
@@ -97,11 +89,10 @@
           },
           "city": "Huntsville",
           "postcode": "35816",
-          "telephone": "(123) 131-23123",
+          "telephone": "+1 (500) 555-0009",
           "vatId": "123",
           "defaultShipping": true,
           "defaultBilling": true,
-          "saveAddressBook": false,
           "street": [
             "Main",
             ""
@@ -116,7 +107,7 @@
         "email": "code2"
       };
 
-      KlaviyoApiCreateUpdate(checkoutData, addressData, true, 'code1', true, 'code2', "https://edge-sandbox-graph.adobe.io/api/3bb8eab1-35cb-4b38-ace9-46e6b4c6c3e7/graphql");
+      KlaviyoApiCreateUpdate(checkoutData, addressData, true, 'S8iGrv', true, 'SKjK48', "https://edge-sandbox-graph.adobe.io/api/3bb8eab1-35cb-4b38-ace9-46e6b4c6c3e7/graphql");
     </script>
 
     <div id="app">

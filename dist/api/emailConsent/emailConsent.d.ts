@@ -6,7 +6,7 @@
  * file in accordance with the terms of the Adobe license agreement
  * accompanying it.
  *******************************************************************/
-export declare const emailConsent: () => string;
-export declare const checkIfEmailExist: (email: string, apiKey: string, apiUrl: string, apiRevision: string) => null;
-export declare const subscribeProfile: (data: object, meshApiPoint: string) => null;
+export declare const checkIfEmailExist: (email: string, meshApiPoint: string) => Promise<{}>;
+export declare const createProfile: (data: object, meshApiPoint: string) => Promise<{}>;
+export declare const subscribeProfile: (data: object, meshApiPoint: string) => {};
 //# sourceMappingURL=emailConsent.d.ts.map

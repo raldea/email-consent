@@ -7,122 +7,93 @@
  * accompanying it. 
  *******************************************************************/
 
+import {setEndpoint, fetchGraphQl} from '../fetch-graphql/index'
 
-export const emailConsent = () => {
-  return 'Howdy!';
+export const checkIfEmailExist = async (
+    email: string,
+    meshApiPoint: string
+) => {
+  let result = {};
+  const query = `
+  query GetProfileByEmail($email: String!) {
+    GetProfileByEmail(email: $email)
+  }
+ `;
+
+  const variable = {
+    variables: {
+      "email": email
+    }
+  }
+
+  setEndpoint(meshApiPoint);
+  await fetchGraphQl(query, variable).then(
+      response => response.data
+  ).then(data => {
+    result = data;
+  }).catch(error => {
+    console.error("Error executing GraphQL mutation:", error);
+  });
+
+  return result;
 }
 
-export const checkIfEmailExist = (
-    email: string,
-    apiKey: string,
-    apiUrl: string,
-    apiRevision: string
+export const createProfile = async (
+  data: object,
+  meshApiPoint: string
 ) => {
-  console.log(email);
-  console.log(apiKey);
-  console.log(apiUrl);
-  console.log(apiRevision);
+  let result = {};
+  const mutation = `
+  mutation CreateProfile($input: mutationInput_sendConsent_input_Input!) {
+    createProfile(
+    input: $input
+    )
+  }`;
 
-  // let qs = new URLSearchParams({
-  //   'filter': `equals(email,"${email}")`
-  // });
-  //
-  // fetch('https://jsonplaceholder.typicode.com/posts/1')
-  //     .then(res => res.json())
-  //     .then(data => console.log(data))
-  //     .catch(err => console.error(err));
-  //
-  // console.log('asda');
-  //
-  // fetch('https://api.agify.io/?name=michael')
-  //     .then(res => res.json())
-  //     .then(data => console.log(data))
-  //     .catch(err => console.error(err));
+  const variable = {
+    variables: {
+      "input": data
+    }
+  }
 
+  setEndpoint(meshApiPoint);
+  await fetchGraphQl(mutation, variable).then(
+      response => response.data
+  ).then(data => {
+    result = data;
+  }).catch(error => {
+    console.error("Error executing GraphQL mutation:", error);
+  });
 
-
-  // fetch(`https://a.klaviyo.com/api/profiles?${qs}`, {
-  //   method: 'GET',
-  //   headers: {
-  //     accept: 'application/vnd.api+json',
-  //     Authorization: `Klaviyo-API-Key ${apiKey}`,
-  //     revision: apiRevision
-  //   }
-  // }).then(res => {
-  //   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  //     return res.json();
-  //   }
-  // ).then(json => {
-  //   const profile = json.data?.[0] ?? null;
-  //
-  //   if (!profile) {
-  //     console.log('No profile found for', email);
-  //   } else {
-  //     console.log('Profile:', profile);
-  //   }
-  //
-  //   return profile;
-  // }).catch(err => {
-  //   console.error('Klaviyo lookup failed:', err);
-  // }).finally(() => {
-  //   console.log('Lookup complete');
-  // });
-
-  return null;
+  return result;
 }
 
 export const subscribeProfile = (
     data: object,
     meshApiPoint: string
 ) => {
+  let result = {};
   const mutation = `
-  mutation CreateProfile($revision: String!, $input: CreateProfileInput!) {
-    create_profile(
-    revision: $revision
+  mutation SendConsent($input: mutationInput_sendConsent_input_Input!) {
+    sendConsent(
     input: $input
-    ) {
-      data {
-        type
-        id
-        attributes {
-          email
-        }
-        relationships
-      }
-    }
+    )
   }`;
 
-  const variables = {
-    revision: "2025-04-15",
-    input: {
-      data: {
-        type: "profile",
-        attributes: {
-          first_name: "johnc",
-          email: "john.doe@example.com"
-        }
-      }
+  const variable = {
+    variables: {
+      "input": data
     }
-  };
+  }
 
-  fetch(meshApiPoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: mutation,
-      variables
-    })
-  }).then(
-    response => response.json()
+  setEndpoint(meshApiPoint);
+  fetchGraphQl(mutation, variable).then(
+      response => response.data
   ).then(data => {
-    console.log("GraphQL mutation response:", data);
-
-    return data;
+      result = data;
   }).catch(error => {
-    console.error("Error executing GraphQL mutation:", error);
+      console.error("Error executing GraphQL mutation:", error);
   });
 
-  return null;
+  return result;
 }

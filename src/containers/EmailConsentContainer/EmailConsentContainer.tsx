@@ -9,7 +9,7 @@
   
 import { HTMLAttributes } from 'preact/compat';
 import { Container } from '@adobe-commerce/elsie/lib';
-import { checkIfEmailExist, subscribeProfile } from '../../api/emailConsent';
+import { checkIfEmailExist, subscribeProfile, createProfile } from '../../api/emailConsent';
 import { EmailConsentUiComponent } from '@/emailconsent/components';
 
 export interface EmailConsentContainerProps extends HTMLAttributes<HTMLDivElement> {
@@ -61,62 +61,65 @@ export const KlaviyoApiCreateUpdate = async (
     smsListCode: string,
     meshApiPoint: string
 ): Promise<object|null> => {
-    let checkIfEmailExists = {
-        data: {
-            id: '111'
-        }
-    };
+    let checkIfEmailExists = await checkIfEmailExist(checkoutData.email, meshApiPoint);
     let profile = null;
-    let profileId = '111';
+    let profileId = null;
 
-    if (!checkIfEmailExists) {
-        console.log('test');
-        // TODO
-        // let data = restructureCustomerObject(checkoutData, addressData, null, null, null, true);
-        // profile = createProfile(data, meshApiPoint);
+    if (checkIfEmailExists.GetProfileByEmail.data.length <= 0) {
+        let data = restructureCustomerObject(checkoutData, addressData, null, null, null, true);
+        let newProfile = await createProfile(data, meshApiPoint);
+
+        if (Object.keys(newProfile.createProfile).length > 0) {
+            profile = newProfile.createProfile.data;
+        }
     } else {
-        console.log('test1');
-        profile = checkIfEmailExists;
+        profile = checkIfEmailExists.GetProfileByEmail.data[0];
     }
 
     let subscribeData = [];
-
-    if (profile && Object.keys(profile.data).length > 0) {
-        profileId = profile.data.id;
+    if (profile && Object.keys(profile.id).length > 0) {
+        profileId = profile.id;
     }
 
-    if (emailConsent) {
-        let data = restructureCustomerObject(checkoutData, addressData, 'email', profileId, emailListCode);
+    if (profileId) {
+        if (emailConsent) {
+            let data = restructureCustomerObject(checkoutData, addressData, 'email', profileId, emailListCode);
 
-        if (Object.keys(data).length > 0) {
-            console.log('---!!');
-            console.log(data);
-            subscribeData.push(data);
+            if (Object.keys(data).length > 0) {
+                subscribeData.push(data);
+            }
         }
-    }
 
-    if (smsConsent) {
-        let data = restructureCustomerObject(checkoutData, addressData, 'sms', profileId, smsListCode);
+        if (smsConsent) {
+            let data = restructureCustomerObject(checkoutData, addressData, 'sms', profileId, smsListCode);
 
-        if (Object.keys(data).length > 0) {
-            console.log('---!');
-            console.log(data);
-            subscribeData.push(data);
+            if (Object.keys(data).length > 0) {
+                subscribeData.push(data);
+            }
         }
-    }
 
-    console.log('---');
-    console.log(subscribeData);
-
-    if (subscribeData.length) {
-        // TODO
-        // for (const subscribe of subscribeData) {
-        //     subscribeProfile(subscribe, meshApiPoint);
-        // }
+        if (subscribeData.length) {
+            for (const subscribe of subscribeData) {
+                subscribeProfile(subscribe, meshApiPoint);
+            }
+        }
     }
 
     return profile;
 };
+
+const convertPhoneFormat = (
+    phone: string|null
+): string|null => {
+    let result = null;
+
+    if (phone) {
+        const string = String(phone);
+        return string.replace(/^(\d)/, '+$1').replace(/^\((?!\+)/, '(+');
+    }
+
+    return result;
+}
 
 const restructureCustomerObject = (
     checkoutData: object,
@@ -130,6 +133,7 @@ const restructureCustomerObject = (
     let relationships = {};
     let addressDataAttributes = addressData.data;
     let data = {};
+    let phone = convertPhoneFormat(addressDataAttributes.telephone);
 
     if (create) {
         data = {
@@ -137,7 +141,7 @@ const restructureCustomerObject = (
                 type: "profile",
                 attributes: {
                     email: checkoutData.email || null,
-                    phone_number: addressDataAttributes.telephone || null,
+                    phone_number: phone || null,
                     first_name: addressDataAttributes.firstName || null,
                     last_name: addressDataAttributes.lastName || null,
                     organization: addressDataAttributes.company || null,
@@ -158,10 +162,20 @@ const restructureCustomerObject = (
         if (consentIdentifier === "email" && profileId) {
             data = {
                 data: {
-                    type: "profile",
-                    id: profileId,
+                    type: "profile-subscription-bulk-create-job",
                     attributes: {
-                        email: checkoutData.email || null
+                        profiles: {
+                            data: [
+                                {
+                                    type: "profile",
+                                    id: profileId,
+                                    attributes: {
+                                        email: checkoutData.email || null,
+                                        phone_number: phone || null
+                                    }
+                                }
+                            ]
+                        }
                     }
                 }
             };
@@ -176,10 +190,19 @@ const restructureCustomerObject = (
         if (consentIdentifier === "sms" && profileId) {
             data = {
                 data: {
-                    type: "profile",
-                    id: profileId,
+                    type: "profile-subscription-bulk-create-job",
                     attributes: {
-                        phone_number: addressDataAttributes.telephone || null
+                        profiles: {
+                            data: [
+                                {
+                                    type: "profile",
+                                    id: profileId,
+                                    attributes: {
+                                        phone_number: phone || null
+                                    }
+                                }
+                            ]
+                        }
                     }
                 }
             };
@@ -187,12 +210,15 @@ const restructureCustomerObject = (
             subscriptions.sms = {
                 marketing: {
                     consent: "SUBSCRIBED"
+                },
+                transactional: {
+                    consent: "SUBSCRIBED"
                 }
             };
         }
 
         if (profileId && Object.keys(subscriptions).length > 0) {
-            data.data.attributes.subscriptions = subscriptions;
+            data.data.attributes.profiles.data[0].attributes.subscriptions = subscriptions;
         }
 
         if (code) {
