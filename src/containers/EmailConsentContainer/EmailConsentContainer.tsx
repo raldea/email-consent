@@ -141,7 +141,6 @@ const restructureCustomerObject = (
                 type: "profile",
                 attributes: {
                     email: checkoutData.email || null,
-                    phone_number: phone || null,
                     first_name: addressDataAttributes.firstName || null,
                     last_name: addressDataAttributes.lastName || null,
                     organization: addressDataAttributes.company || null,
